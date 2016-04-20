@@ -42,7 +42,7 @@ defmodule NectarCore.Web do
 
   def admin_controller do
     quote do
-      use Phoenix.Controller
+      use Phoenix.Controller, namespace: Nectar.Admin
 
       alias  unquote(repo_to_alias)
       import Ecto
