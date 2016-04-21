@@ -9,9 +9,12 @@ defmodule Nectar.Plugs.Cart do
   end
 
   def call(conn, _) do
-    current_user  = Guardian.Plug.current_resource(conn)
     # Hack: Guardian returns User but we need UserForCheckout
-    current_user  = %User{id: current_user.id}
+    current_user  =
+      case Guardian.Plug.current_resource(conn) do
+        nil  -> nil
+        user -> %User{id: user.id}
+      end
     current_order = fetch_current_order_from_session(conn)
     assign_cart_to_session_and_user(conn, current_user, current_order)
   end

@@ -1,7 +1,7 @@
 defmodule Nectar.Admin.UserOrderController do
   use NectarCore.Web, :admin_controller
 
-  alias Nectar.User
+  alias Nectar.UserForCheckout, as: User
   alias Nectar.Order
 
   plug Guardian.Plug.EnsureAuthenticated, handler: Nectar.Auth.HandleAdminUnauthenticated, key: :admin
