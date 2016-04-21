@@ -3,12 +3,12 @@ defmodule Nectar.Admin.CartController do
 
   plug Guardian.Plug.EnsureAuthenticated, handler: Nectar.Auth.HandleAdminUnauthenticated, key: :admin
 
-  alias Nectar.Repo
   alias Nectar.LineItem
-  alias Nectar.Product
+  alias Nectar.ProductForCheckout, as: Product
+  alias Nectar.UserForCheckout, as: User
 
   def new(conn, _params) do
-    users = Nectar.Repo.all(Nectar.User)
+    users = Repo.all(User)
     cart_changeset = Nectar.Order.cart_changeset(%Nectar.Order{}, %{})
     render(conn, "new.html", users: users, cart_changeset: cart_changeset)
   end

@@ -26,7 +26,7 @@ defmodule Nectar.ProcessedOrder do
     has_one  :order_shipping_address, Nectar.OrderShippingAddress, foreign_key: :order_id
     has_one  :shipping_address, through: [:order_shipping_address, :address]
 
-    belongs_to :user, Nectar.UserForCheckout
+    belongs_to :user, Nectar.OrderedBy
 
     timestamps
   end
