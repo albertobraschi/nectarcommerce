@@ -155,7 +155,11 @@ defmodule Nectar.LineItemTest do
   defp create_product do
     product = Product.create_changeset(%Product{}, @product_attr)
     |> Repo.insert!
-    product
+  end
+
+  defp checkoutable_products do
+    Repo.get(Nectar.ProductForCheckout, create_product.id)
+    |> Repo.preload([:variants, :master])
   end
 
   defp create_product_with_variant do
@@ -165,6 +169,7 @@ defmodule Nectar.LineItemTest do
     |> Variant.create_variant_changeset(@valid_variant_attrs)
     |> Repo.insert!
     product
+    Repo.get(Nectar.ProductForCheckout, product.id) |> Repo.preload([:variants, :master])
   end
 
   defp create_product_with_oos_variant do
@@ -173,11 +178,11 @@ defmodule Nectar.LineItemTest do
     |> build_assoc(:variants)
     |> Variant.create_variant_changeset(@valid_variant_attrs)
     |> Repo.insert!
-    Repo.one(Product.product_with_variants(product.id))
+    Repo.one(Nectar.ProductForCheckout.product_with_variants(product.id))
   end
 
   defp create_line_item_with_product(order_id \\ nil) do
-    create_product.master
+    checkoutable_products.master
     |> Ecto.build_assoc(:line_items)
     |> LineItem.create_changeset(%{order_id: order_id || create_order.id})
   end
