@@ -14,61 +14,7 @@ defmodule Nectar.ProductForCheckout do
     has_one :master, Nectar.VariantForCheckout, on_delete: :nilify_all, foreign_key: :product_id
     has_many :variants, Nectar.VariantForCheckout, on_delete: :nilify_all, foreign_key: :product_id
 
-    has_many :product_option_types, Nectar.ProductOptionType, foreign_key: :product_id
-    has_many :option_types, through: [:product_option_types, :option_type]
-
-    has_many :product_categories, Nectar.ProductCategory, foreign_key: :product_id
-    has_many :categories, through: [:product_categories, :category]
-
     timestamps
-  end
-
-  @required_fields ~w(name description available_on)
-  @optional_fields ~w(slug)
-
-  @doc """
-  Creates a changeset based on the `model` and `params`.
-
-  If no params are provided, an invalid changeset is returned
-  with no validation performed.
-  """
-  def changeset(model, params \\ :empty) do
-    model
-    |> cast(params, @required_fields, @optional_fields)
-  end
-
-  def create_changeset(model, params \\ :empty) do
-    model
-    |> cast(params, @required_fields, @optional_fields)
-    |> Validations.Date.validate_not_past_date(:available_on)
-    |> Nectar.Slug.generate_slug()
-    |> cast_assoc(:master, required: true, with: &Nectar.Variant.create_master_changeset/2)
-    |> cast_assoc(:product_option_types, required: true, with: &Nectar.ProductOptionType.from_product_changeset/2)
-    |> cast_assoc(:product_categories, with: &Nectar.ProductCategory.from_product_changeset/2)
-    |> unique_constraint(:slug)
-  end
-
-  def update_changeset(model, params \\ :empty) do
-    model
-    |> cast(params, @required_fields, @optional_fields)
-    |> Validations.Date.validate_not_past_date(:available_on)
-    |> Nectar.Slug.generate_slug()
-    |> cast_assoc(:product_categories, with: &Nectar.ProductCategory.from_product_changeset/2)
-    |> cast_assoc(:master, required: true, with: &Nectar.Variant.update_master_changeset/2)
-    |> validate_available_on_lt_discontinue_on
-    |> cast_assoc(:product_option_types, required: true, with: &Nectar.ProductOptionType.from_product_changeset/2)
-    |> unique_constraint(:slug)
-  end
-
-  defp validate_available_on_lt_discontinue_on(changeset) do
-    changed_master = get_change(changeset, :master)
-    changed_discontinue_on = if changed_master do
-      get_change(changed_master, :discontinue_on) || changed_master.model.discontinue_on
-    else
-      changeset.model.master.discontinue_on
-    end
-    changeset
-      |> Validations.Date.validate_lt_date(:available_on, changed_discontinue_on)
   end
 
   def has_variants_excluding_master?(product) do
@@ -93,7 +39,7 @@ defmodule Nectar.ProductForCheckout do
 
   # helper queries for preloading variant data.
   @master_query  from m in Nectar.VariantForCheckout, where: m.is_master
-  @variant_query from m in Nectar.VariantForCheckout, where: not(m.is_master), preload: [option_values: :option_type]
+  @variant_query from m in Nectar.VariantForCheckout, where: not(m.is_master)
 
   def products_with_master_variant do
     from p in __MODULE__, preload: [master: ^@master_query]
