@@ -57,8 +57,7 @@ defmodule Nectar.Mixfile do
       {:nectar_config, in_umbrella: true},
       {:nectar_checkout, in_umbrella: true},
       {:nectar_accounts, in_umbrella: true},
-      {:nectar_inventory, in_umbrella: true},
-      {:nectar_order_processing, in_umbrella: true}
+      {:nectar_inventory, in_umbrella: true}
     ]
   end
 

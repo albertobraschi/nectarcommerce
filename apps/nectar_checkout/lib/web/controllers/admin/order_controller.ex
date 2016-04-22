@@ -3,7 +3,7 @@ defmodule Nectar.Admin.OrderController do
 
   plug Guardian.Plug.EnsureAuthenticated, handler: Nectar.Auth.HandleAdminUnauthenticated, key: :admin
 
-  alias Nectar.ProcessedOrder, as: Order
+  alias Nectar.Order, as: Order
   alias Nectar.User
   alias Nectar.LineItem
   alias Nectar.Product

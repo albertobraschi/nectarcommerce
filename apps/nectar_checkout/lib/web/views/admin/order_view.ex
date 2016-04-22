@@ -2,7 +2,7 @@ defmodule Nectar.Admin.OrderView do
   use NectarCore.Web, :view
 
   alias Nectar.Admin.VariantView
-  alias Nectar.ProcessedOrder, as: Order
+  alias Nectar.Order, as: Order
 
   def only_master_variant?(%{variants: [_]}), do: true
   def only_master_variant?(%{variants: [_|_]}), do: false

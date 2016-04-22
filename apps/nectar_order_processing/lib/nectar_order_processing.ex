@@ -1,2 +1,0 @@
-defmodule NectarOrderProcessing do
-end
