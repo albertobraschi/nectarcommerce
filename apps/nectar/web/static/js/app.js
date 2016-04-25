@@ -21,7 +21,7 @@ import payment from "web/static/js/payment";
 import cart_creator from "web/static/js/cart_creator";
 import ReactDOM from "react-dom";
 import React from "react";
-import Cart from "web/static/js/Cart";
+import MiniCart from "web/static/js/mini_cart";
 
 ajax.setup();
 window.zone = zone;
@@ -54,4 +54,4 @@ $(document).ready(function() {
   });
 });
 
-ReactDOM.render(<Cart/>, document.getElementById("cart"));
+ReactDOM.render(<MiniCart/>, document.getElementById("cart"));
