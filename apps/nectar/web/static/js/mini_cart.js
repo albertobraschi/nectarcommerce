@@ -18,11 +18,10 @@ class MiniCartDetail extends React.Component {
 
 MiniCartDetail.propTypes = {
   itemsInCart: function(props, propName, componentName) {
-    console.log(props);
-    console.log(propName);
-    console.log(componentName);
     if (props[propName] < 0) {
       return new Error(`Invalid prop ${propName} supplied to ${componentName}, should be >= 0`);
+    } else {
+      return true;
     }
   }
 };
