@@ -1,0 +1,5 @@
+const Constants = {
+    FETCHING_CART_SUMMARY: 'FETCHING_CART_SUMMARY',
+    CART_SUMMARY_RECEIVED: 'CART_SUMMARY_RECEIVED'
+};
+export default Constants;

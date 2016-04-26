@@ -19,9 +19,11 @@ import order from "web/static/js/order";
 import order_show from "web/static/js/order_show";
 import payment from "web/static/js/payment";
 import cart_creator from "web/static/js/cart_creator";
+import Redux from "redux";
 import ReactDOM from "react-dom";
 import React from "react";
 import MiniCart from "web/static/js/mini_cart";
+import configureStore from './store';
 
 ajax.setup();
 window.zone = zone;
@@ -54,4 +56,7 @@ $(document).ready(function() {
   });
 });
 
-ReactDOM.render(<MiniCart/>, document.getElementById("cart"));
+// React related code here //
+const store = configureStore();
+
+ReactDOM.render(<MiniCart store={store}/>, document.getElementById("cart"));

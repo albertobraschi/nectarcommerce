@@ -1,14 +1,18 @@
 defmodule Nectar.CartController do
   use NectarCore.Web, :controller
 
-  def show(conn, _) do
+  def show(conn, params) do
     order =
       conn.assigns.current_order
       |> Repo.preload([line_items: [variant: [:product, option_values: :option_type]]])
-    order_changeset = Nectar.Order.cart_update_changeset(order, %{})
+
     case request_type(conn) do
-      :ajax -> render(conn, "cart.json", order: order)
-      _     -> render(conn, "show.html", order: order, order_changeset: order_changeset)
+      :ajax ->
+        render(conn, "cart.json", order: order, summary: Map.get(params, "summary", false))
+
+      _     ->
+        order_changeset = Nectar.Order.cart_update_changeset(order, %{})
+        render(conn, "show.html", order: order, order_changeset: order_changeset)
     end
   end
 
