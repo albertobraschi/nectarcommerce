@@ -21,7 +21,7 @@ MiniCartDetail.propTypes = {
     if (props[propName] < 0) {
       return new Error(`Invalid prop ${propName} supplied to ${componentName}, should be >= 0`);
     } else {
-      return true;
+      return null;
     }
   }
 };

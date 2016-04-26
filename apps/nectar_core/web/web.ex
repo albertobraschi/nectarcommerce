@@ -37,6 +37,7 @@ defmodule NectarCore.Web do
       import NectarCore.Router.Helpers
       import NectarCore.Gettext
       alias  unquote(router_to_alias).Helpers, as: NectarRoutes
+      import NectarCore.ControllerHelpers, only: [request_type: 1]
     end
   end
 
