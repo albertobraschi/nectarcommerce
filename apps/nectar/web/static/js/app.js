@@ -24,6 +24,8 @@ import ReactDOM from "react-dom";
 import React from "react";
 import MiniCart from "web/static/js/mini_cart";
 import configureStore from './store';
+import {Provider} from 'react-redux';
+import cartActions from './actions/cart';
 
 ajax.setup();
 window.zone = zone;
@@ -59,4 +61,12 @@ $(document).ready(function() {
 // React related code here //
 const store = configureStore();
 
-ReactDOM.render(<MiniCart store={store}/>, document.getElementById("cart"));
+ReactDOM.render(<Provider store={store}>
+                  <MiniCart/>
+                </Provider>,
+                document.getElementById("cart"));
+window.refreshCart = function() { store.dispatch(cartActions.fetchCurrentCartSummary()) };
+
+$(document).ready(function(){
+    refreshCart();
+});
