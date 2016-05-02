@@ -3,7 +3,7 @@ import {httpGet} from '../utils';
 
 
 const Actions = {
-  fetchCurrentCartSummary: () => {
+  fetchCurrentCartSummary: (callback) => {
     return dispatch => {
       dispatch({type: Constants.FETCHING_CART_SUMMARY});
 
@@ -13,7 +13,7 @@ const Actions = {
             type: Constants.CART_SUMMARY_RECEIVED,
             cart_summary: data
           });
-        });
+        }).then(function(data) {callback();});
     };
   }
 };

@@ -19,8 +19,8 @@ export default class BaseView {
                       </div>
                     </Provider>,
                     document.getElementById('cart'));
-    this.store.dispatch(cartActions.fetchCurrentCartSummary());
-    this.setupListeners();
+
+    this.store.dispatch(cartActions.fetchCurrentCartSummary(this.setupListeners.bind(this)));
   }
 
   unmount() {
@@ -30,6 +30,6 @@ export default class BaseView {
   setupListeners() {
     this.socket = socket;
     socket.connect();
-    new CartNotificationListener(socket, this.store, this.store.getState());
+    new CartNotificationListener(socket, this.store, {cart_id: this.store.getState().mini_cart.cart_summary.id});
   }
 }

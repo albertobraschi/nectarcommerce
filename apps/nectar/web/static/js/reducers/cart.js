@@ -1,7 +1,7 @@
 import Constants from '../constants';
 
 const initialState = {
-  cart_summary: {items_in_cart: 0},
+  cart_summary: {items_in_cart: 0, id: -1},
   fetching: true
 };
 

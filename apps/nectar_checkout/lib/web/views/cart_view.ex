@@ -6,7 +6,8 @@ defmodule Nectar.CartView do
 
   def render("cart.json",  %{order: order, summary: "true"}) do
     %{
-      items_in_cart: Nectar.CartManager.count_items_in_cart(order)
+      items_in_cart: Nectar.CartManager.count_items_in_cart(order),
+      id: order.id
     }
   end
 
