@@ -12,6 +12,10 @@ defmodule Nectar.ShippingCalculator.Runner do
     GenServer.start(__MODULE__, state, [])
   end
 
+  def start(caller, [], order) do
+    []
+  end
+
   def handle_cast({:calculate}, state) do
     current = self()
     proc_list = Enum.map(state.shipping_methods, fn(method) ->

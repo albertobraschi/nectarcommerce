@@ -138,8 +138,6 @@ defmodule Nectar.CartManagerTest do
     # update as discontinued
     # can be asserted for change but updates are not assumed to fail
     # can fail with database constraint so good to check
-    import IEx
-    IEx.pry
     from(p in Product, where: p.id == ^product.id, update: [set: [available_on: ^get_past_date(3)]])
       |> Repo.update_all([])
     from(v in Variant, where: (v.product_id == ^product.id and v.is_master == true), update: [set: [discontinue_on: ^get_past_date(2)]])

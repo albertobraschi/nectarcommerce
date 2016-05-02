@@ -332,7 +332,8 @@ defmodule Nectar.CheckoutManagerTest do
   end
 
   defp move_cart_to_shipping_state(cart) do
-    CheckoutManager.next(cart, valid_shipping_params(cart))
+    shipping_params = valid_shipping_params(cart)
+    CheckoutManager.next(cart, shipping_params)
   end
 
   defp move_cart_to_tax_state(cart) do
