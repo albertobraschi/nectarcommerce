@@ -14,12 +14,19 @@ defmodule Nectar.ProductController do
   end
 
   def index(conn, _params) do
-    categories = Repo.all(Nectar.Category.with_associated_products)
     products = Repo.all(Product.products_with_master_variant)
-    render(conn, "index.html", products: products, categories: categories,
-      search_changeset: SearchProduct.changeset(%SearchProduct{}),
-      search_action: NectarRoutes.product_path(conn, :index)
-    )
+
+    case request_type(conn) do
+      :ajax ->
+        render(conn, "product_listing.json", products: products)
+        _   ->
+        categories = Repo.all(Nectar.Category.with_associated_products)
+        render(conn, "index.html", products: products, categories: categories,
+          search_changeset: SearchProduct.changeset(%SearchProduct{}),
+          search_action: NectarRoutes.product_path(conn, :index)
+        )
+    end
+
   end
 
   def show(conn, %{"id" => id}) do

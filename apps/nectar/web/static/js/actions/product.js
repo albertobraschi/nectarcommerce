@@ -3,15 +3,15 @@ import {httpGet} from '../utils';
 
 
 const Actions = {
-  fetchCurrentCartSummary: () => {
+  getProductListing: () => {
     return dispatch => {
-      dispatch({type: Constants.FETCHING_CART_SUMMARY});
+      dispatch({type: Constants.FETCHING_PRODUCTS});
 
-      httpGet('/cart?summary=true')
+      httpGet('/products')
         .then((data) => {
           dispatch({
-            type: Constants.CART_SUMMARY_RECEIVED,
-            cart_summary: data
+            type: Constants.PRODUCTS_RECEIVED,
+            products: data.products
           });
         });
     };

@@ -7,11 +7,11 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch(action.type) {
-    case Constants.FETCHING_CART_SUMMARY:
+  case Constants.FETCHING_CART_SUMMARY:
     return {...state, fetching: true};
-    case Constants.CART_SUMMARY_RECEIVED:
-    return {...state, cart_summary: action.cart_summary};
-    default:
+  case Constants.CART_SUMMARY_RECEIVED:
+    return {...state, cart_summary: action.cart_summary, fetching: false};
+  default:
     return state;
   }
 }

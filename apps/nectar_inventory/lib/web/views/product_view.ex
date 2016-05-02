@@ -8,6 +8,9 @@ defmodule Nectar.ProductView do
   def only_master_variant?(%Product{variants: [_]}), do: true
   def only_master_variant?(%Product{variants: [_|_]}), do: false
 
+
+  def render("product_listing.json", %{products: products}), do: %{products: product_listing(products)}
+
   def product_variant_options(%Product{} = product) do
     Enum.map(product.variants, fn(variant) ->
       {variant_name(variant), variant.id}
@@ -25,6 +28,16 @@ defmodule Nectar.ProductView do
     else
       ""
     end
+  end
+
+  defp product_listing(products) do
+    Enum.map(products, fn (product) ->
+      %{name: product.name,
+        link: "product_link",
+        thumbnail: "product_thumbnail",
+        cost_price: product.master.cost_price
+       }
+    end)
   end
 
 end

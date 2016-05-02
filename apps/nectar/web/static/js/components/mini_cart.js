@@ -1,5 +1,4 @@
 import React from "react";
-import cartActions from '../js/actions/cart';
 import { connect } from 'react-redux';
 
 class CartSummary extends React.Component {

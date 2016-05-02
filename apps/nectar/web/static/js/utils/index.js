@@ -8,7 +8,7 @@ const defaultHeaders = {
 };
 
 function buildHeaders() {
-    // fetch csrf token
+  // fetch csrf token
   const csrfToken = 'dsahdjkashdksahdj'  ;
   return {...defaultHeaders, 'X-CSRF-TOKEN': csrfToken};
 }
