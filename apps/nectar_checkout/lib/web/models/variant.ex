@@ -14,7 +14,7 @@ defmodule Nectar.VariantForCheckout do
     field :discontinue_on, Ecto.Date
     field :cost_price, :decimal
     field :cost_currency, :string
-    field :image, Nectar.VariantImage.Type
+    field :image, Nectar.VariantForCheckoutImage.Type
 
     field :total_quantity, :integer, default: 0
 
