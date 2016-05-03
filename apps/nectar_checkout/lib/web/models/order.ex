@@ -389,4 +389,15 @@ defmodule Nectar.Order do
     (from o in Nectar.Order, where: o.user_id == ^id)
   end
 
+  def variants_in_cart(%Order{id: id} = order) do
+    from v in assoc(order, :variants)
+  end
+
+  def with_variants_in_cart(variant_ids) do
+    from order in Nectar.Order,
+      join: variant in assoc(order, :variants),
+    where: variant.id in ^variant_ids,
+    select: order
+  end
+
 end

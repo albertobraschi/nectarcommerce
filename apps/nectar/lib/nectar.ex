@@ -15,13 +15,16 @@ defmodule Nectar do
       # worker(Nectar.Worker, [arg1, arg2, arg3]),
 
       worker(Commerce.Billing.Worker, stripe_worker_configuration, id: :stripe),
-      worker(Commerce.Billing.Worker, braintree_worker_configuration, id: :braintree)
+      worker(Commerce.Billing.Worker, braintree_worker_configuration, id: :braintree),
+      CartEventManager.child_spec
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Nectar.Supervisor]
-    Supervisor.start_link(children, opts)
+    with {:ok, pid} <- Supervisor.start_link(children, opts),
+         :ok        <- CartEventManager.register_with_manager,
+    do: {:ok, pid}
   end
 
   # Tell Phoenix to update the endpoint configuration
