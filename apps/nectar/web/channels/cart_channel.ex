@@ -4,6 +4,8 @@ defmodule Nectar.CartChannel do
 
   def join("cart:" <> cart_id, _params, socket) do
     cart_id = cart_id
+    {:ok, server} = CartDaemon.get(cart_id)
+    GenServer.cast(server, {:monitor})
     {:ok, %{}, assign(socket, :cart_id, cart_id)}
   end
 
