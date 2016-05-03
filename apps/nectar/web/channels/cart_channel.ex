@@ -7,9 +7,13 @@ defmodule Nectar.CartChannel do
     IO.inspect "joining channel"
     Task.async(fn () ->
       IO.inspect "started sleeping"
-      :timer.sleep(20000)
+      :timer.sleep(10000)
       IO.inspect "sending new message"
-      Nectar.Endpoint.broadcast_from! self(), "cart:#{cart_id}", "new_notification", %{msg: "hello world!"}
+      Nectar.Endpoint.broadcast_from! self(), "cart:#{cart_id}", "new_notification", %{msg: "hello world!"}
+      IO.inspect "sleeping again"
+      :timer.sleep(10000)
+      IO.inspect "sending new message"
+      Nectar.Endpoint.broadcast_from! self(), "cart:#{cart_id}", "new_notification", %{msg: "hello world!"}
     end)
     {:ok, %{}, assign(socket, :cart_id, cart_id)}
   end
