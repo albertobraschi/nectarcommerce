@@ -6,6 +6,7 @@ export default class CartNotificationListener {
     this.store   = store;
     this.socket  = socket;
     this.channel = socket.channel("cart:"+options["cart_id"], {});
+    this.channel.join().receive("ok", () => console.log("join ok"));
     this.channel.on("new_notification", this.dispatchCartNotification.bind(this));
   }
 
