@@ -172,9 +172,34 @@ defmodule Nectar.Order do
 
 
   def confirm_availability(order) do
-    {sufficient_quantity_available, oos_items} =
+    {sufficient_quantity_available, oos_items} = check_if_variants_in_stock(order)
+    if sufficient_quantity_available do
+      order
+    else
+      name_of_oos =
+       oos_items
+       |> Enum.reduce("", fn (item, acc) -> acc <> Nectar.Variant.display_name(item.variant) <> "," end)
+      add_error(order, :line_items, "#{name_of_oos} are out of stock")
+    end
+  end
+
+  def check_if_variants_in_stock(%Ecto.Changeset{model: order}) do
+    check_if_variants_in_stock(order)
+  end
+
+  def check_if_variants_in_stock(order) when is_binary(order) do
+    check_if_variants_in_stock(String.to_integer(order))
+  end
+
+  def check_if_variants_in_stock(order) when is_number(order) do
+    order = Repo.get!(Order, order)
+    check_if_variants_in_stock(order)
+  end
+
+
+  def check_if_variants_in_stock(%Order{} = order) do
       Nectar.LineItem
-      |> Nectar.LineItem.in_order(order.model)
+      |> Nectar.LineItem.in_order(order)
       |> Nectar.Repo.all
       |> Nectar.Repo.preload(:variant)
       |> Enum.reduce({true, []}, fn (ln_item, {status, out_of_stock}) ->
@@ -185,14 +210,6 @@ defmodule Nectar.Order do
                                      {false, [ln_item|out_of_stock]}
                                    end
                                  end)
-    if sufficient_quantity_available do
-      order
-    else
-      name_of_oos =
-       oos_items
-       |> Enum.reduce("", fn (item, acc) -> acc <> Nectar.Variant.display_name(item.variant) <> "," end)
-      add_error(order, :line_items, "#{name_of_oos} are out of stock")
-    end
   end
 
   # returns the appropriate changeset required based on the next state
@@ -398,6 +415,15 @@ defmodule Nectar.Order do
       join: variant in assoc(order, :variants),
     where: variant.id in ^variant_ids,
     select: order
+  end
+
+  # used for sending out of stock notifications
+  def out_of_stock_carts_sharing_variants_with(order) do
+    out_of_stock_variants_in_cart =
+      Repo.all(from v in Order.variants_in_cart(order),
+               where: v.bought_quantity == v.total_quantity,
+               select: v.id)
+    Repo.all(Order.with_variants_in_cart(out_of_stock_variants_in_cart))
   end
 
 end
