@@ -1,18 +1,24 @@
-import BaseView from "./base_view";
-import ProductView from "./products";
+import BaseView      from "./base_view";
+import AdminBaseView from "./admin_base_view";
+import ProductView   from "./products";
+import AdminCountryView from "./admin/countries";
 
 // add all the views here.
-const views = {ProductView};
+const views = {ProductView, AdminCountryView};
 
 export default function viewToRender(view) {
   let viewLookUp   = view.split(".");
   const actionName = viewLookUp.pop();
-  const viewName   = viewLookUp.join(".");
+  const viewName   = viewLookUp.join("");
   let actionLookup = views[viewName];
 
   if (actionLookup) {
     return actionLookup(actionName);
   } else {
-    return BaseView;
+    if (viewLookUp[0] == 'Admin') {
+      return AdminBaseView;
+    } else {
+      return BaseView;
+    }
   }
 }

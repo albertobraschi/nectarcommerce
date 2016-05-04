@@ -10,6 +10,7 @@ defmodule Nectar.LayoutView do
     |> Phoenix.Naming.resource_name
     |> Phoenix.Naming.camelize
   end
+
   defp view_template_name(template_name) do
     String.replace_suffix(template_name, ".html", "")
   end
