@@ -5,9 +5,11 @@ import AdminCountryView from "./admin/countries";
 import AdminOrderView from "./admin/orders";
 import AdminCartView from "./admin/cart";
 import AdminZoneView from "./admin/zones";
+import AdminCheckoutView from "./admin/checkout";
+import CheckoutView from "./checkout
 
 // add all the views here.
-const views = {ProductView, AdminCountryView, AdminOrderView, AdminCartView, AdminZoneView};
+const views = {ProductView, AdminCountryView, AdminOrderView, AdminCartView, AdminZoneView, AdminCheckoutView, CheckoutView};
 
 export default function viewToRender(view) {
   let viewLookUp   = view.split(".");
