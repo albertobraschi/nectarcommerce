@@ -11,7 +11,6 @@ import CartNotificationListener from "../listeners/cart_notification_listener";
 export default class BaseView {
   mount() {
     this.store = configureStore();
-    console.log("common action for application");
     ReactDOM.render(<Provider store={this.store}>
                       <div>
                         <MiniCart/>
@@ -24,7 +23,6 @@ export default class BaseView {
   }
 
   unmount() {
-    console.log("common action for application");
   }
 
   setupListeners() {
