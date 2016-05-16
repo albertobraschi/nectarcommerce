@@ -10,6 +10,7 @@ defmodule Nectar.LineItem do
     belongs_to :variant, Nectar.Variant
     belongs_to :order, Nectar.Order
     field :add_quantity, :integer, virtual: true, default: 0
+    field :unit_price, :decimal
     field :quantity, :integer
     field :total, :decimal
     field :fullfilled, :boolean, default: true
@@ -50,7 +51,7 @@ defmodule Nectar.LineItem do
 
   def create_changeset(model, params \\ :empty) do
     model
-    |> cast(params, ~w(order_id), ~w())
+    |> cast(params, ~w(order_id unit_price), ~w())
     |> foreign_key_constraint(:order_id)
     |> ensure_product_has_no_variants_if_master()
   end
@@ -80,8 +81,8 @@ defmodule Nectar.LineItem do
   defp update_total_changeset(model, :empty), do: model
   defp update_total_changeset(model, _params) do
     quantity = get_field(model, :quantity)
-    variant  = get_field(model, :variant)
-    cost = Decimal.mult(Decimal.new(quantity), variant.cost_price)
+    unit_price = get_field(model, :unit_price)
+    cost = Decimal.mult(Decimal.new(quantity), unit_price)
     put_change(model, :total, cost)
   end
 
