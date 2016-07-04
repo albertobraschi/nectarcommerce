@@ -25,7 +25,7 @@ defmodule Nectar.Mixfile do
       mod: {Nectar, []},
       applications: [
         :phoenix, :phoenix_html, :cowboy, :logger, :gettext,
-        :phoenix_ecto, :postgrex, :worldly, :yamerl, :commerce_billing, :braintree,
+        :phoenix_ecto, :postgrex, :worldly, :commerce_billing, :braintree,
         :ex_aws, :httpoison
       ]
     ]
@@ -53,7 +53,7 @@ defmodule Nectar.Mixfile do
       {:arc_ecto, "~> 0.3.2"},
       {:commerce_billing, github: "nimish-mehta/commerce_billing",  override: true},
       {:braintree, "~> 0.3.2"},
-      {:worldly, in_umbrella: true}
+      {:worldly, github: "vinsol/worldly", branch: "from/nectar"}
     ]
   end
 
