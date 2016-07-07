@@ -19,7 +19,7 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :worldly, :data_path, Path.join(Mix.Project.deps_path, "/worldly/lib/data")
+config :worldly, :data_path, Path.join(Mix.Project.deps_path, "/worldly/data")
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
