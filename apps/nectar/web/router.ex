@@ -15,8 +15,9 @@ defmodule Nectar.Router do
   end
 
   pipeline :admin_browser_auth do
-    plug Guardian.Plug.VerifySession, key: :admin
-    plug Guardian.Plug.LoadResource, key: :admin
+    plug Guardian.Plug.VerifySession
+    plug Guardian.Plug.LoadResource
+    plug Nectar.Plugs.AdminAccessRequired
   end
 
   pipeline :api do
@@ -91,9 +92,6 @@ defmodule Nectar.Router do
     get "/settings/shipping", SettingController, :shipping_method_settings
     post "/settings/payment", SettingController,  :update_payment_method_settings
     post "/settings/shipping", SettingController, :update_shipping_method_settings
-
-
-    resources "/sessions", SessionController, only: [:new, :create]
     delete "/logout", SessionController, :logout
 
     resources "/option_types", OptionTypeController
