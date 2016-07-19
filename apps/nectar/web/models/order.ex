@@ -289,52 +289,10 @@ defmodule Nectar.Order do
     model
   end
 
-  @required_fields ~w(confirmation_status total product_total)a
-  @optional_fields ~w()a
-  def settle_adjustments_and_product_payments(model) do
-    adjustment_total = shipping_total(model) |> Decimal.add(tax_total(model))
-    product_total = product_total(model)
-    total = Decimal.add(adjustment_total, product_total)
-    model
-    |> cast(%{total: total, product_total: product_total,
-              confirmation_status: can_be_fullfilled?(model)},
-              @required_fields ++ @optional_fields)
+  def settlement_changeset(order, params) do
+    order
+    |> cast(params, @required_fields ++ @optional_fields)
     |> validate_required(@required_fields)
-    |> Repo.update!
-  end
-
-  # if none of the line items can be fullfilled cancel the order
-  def can_be_fullfilled?(%Nectar.Order{} = order) do
-    Nectar.Repo.all(from ln in assoc(order, :line_items), select: ln.fullfilled)
-    |> Enum.any?
-  end
-
-  def cart_empty?(%Nectar.Order{} = order) do
-    Nectar.Repo.one(from ln in assoc(order, :line_items), select: count(ln.id)) == 0
-  end
-
-  def shipping_total(model) do
-    Nectar.Repo.one(
-      from shipment_adj in assoc(model, :adjustments),
-      where: not is_nil(shipment_adj.shipment_id),
-      select: sum(shipment_adj.amount)
-    ) || Decimal.new("0")
-  end
-
-  def tax_total(model) do
-    Nectar.Repo.one(
-      from tax_adj in assoc(model, :adjustments),
-      where: not is_nil(tax_adj.tax_id),
-      select: sum(tax_adj.amount)
-    ) || Decimal.new("0")
-  end
-
-  def product_total(model) do
-    Nectar.Repo.one(
-      from line_item in assoc(model, :line_items),
-      where: line_item.fullfilled == true,
-      select: sum(line_item.total)
-    ) || Decimal.new("0")
   end
 
   def acquire_variant_stock(model) do
@@ -438,21 +396,6 @@ defmodule Nectar.Order do
       []  -> add_error(model, :line_items, "Please add some item to your cart to proceed")
       _   -> model
     end
-  end
-
-  def current_order(%Nectar.User{} = user) do
-    Repo.one(from order in all_abandoned_orders_for(user),
-             order_by: [desc: order.updated_at],
-             limit: 1)
-  end
-
-  def all_abandoned_orders_for(%Nectar.User{} = user) do
-    (from order in all_orders_for(user),
-     where: not(order.state == "confirmation"))
-  end
-
-  def all_orders_for(%Nectar.User{id: id}) do
-    (from o in Nectar.Order, where: o.user_id == ^id)
   end
 
 end
